@@ -7,15 +7,19 @@ sys.stdout=io.TextIOWrapper(sys.stdout.buffer,encoding='utf-8')
 
 
 links=list()
+links.append("http://jp.tingroom.com/kouyu/ryqjdh")
+link_range =range(2,23)
 
-link_range =range(4563,7072)
 
-
-file = open("jp.txt",'a')
+file = open("links.txt",'a')
 
 for num in link_range:
-    links.append("http://jp.tingroom.com/kouyu/ryqjdh/{num}.html".format(num=num))
+    links.append("http://jp.tingroom.com/kouyu/ryqjdh/list_{num}.html".format(num=num))
 
+
+import requests
+import re
+import random
 
 
 lua_script = '''
@@ -29,7 +33,7 @@ end
 class JpspdSpider(scrapy.Spider):
     name = 'jpspd'
     allowed_domains = ['jd.com']
-    start_urls = links
+    start_urls = links[:]
 
     def start_requests(self):
         for url in self.start_urls:
@@ -40,7 +44,6 @@ class JpspdSpider(scrapy.Spider):
                                 callback=self.parse)
     def parse(self, response):
         print("-----------------")
-        price = response.xpath('//div[@class="content"]').extract_first()
-        pos = price.find('</div><div class="content" id="article"><p>')
-        if pos:
-            print("content：", price[pos:],file=file)
+        hrefs = response.xpath('//ul[@class="e2"]/li/a/@href').extract()
+        for href in hrefs:
+            print(href,file=file)
