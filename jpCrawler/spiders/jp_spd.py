@@ -7,7 +7,7 @@ sys.stdout=io.TextIOWrapper(sys.stdout.buffer,encoding='utf-8')
 
 
 links=open('links.txt')
-file_to_write = open("export.txt",'a+')
+file_to_write = open("export.txt",'a')
 links= links.readlines()
 
 
@@ -28,10 +28,11 @@ end
 class JpspdSpider(scrapy.Spider):
     name = 'jpspd'
     allowed_domains = ['tingroom.com']
-    start_urls = ['http://jp.tingroom.com/kouyu/ryqjdh/4563.html']
+    start_urls = links
 
     def start_requests(self):
         for url in self.start_urls:
+            
             yield SplashRequest(url,
                                 endpoint='execute',
                                 args={'lua_source': lua_script},
