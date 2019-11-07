@@ -56,7 +56,8 @@ DOWNLOADER_MIDDLEWARES = {
 #SPIDER_MIDDLEWARES = {
 #    'jpCrawler.middlewares.JpcrawlerSpiderMiddleware': 543,
 #}
-SPLASH_URL='http://localhost:8050'
+#SPLASH_URL='http://localhost:8050'
+SPLASH_URL='http://192.168.11.220:8050'
 
 HTTPCACHE_STORAGE = 'scrapy_splash.SplashAwareFSCacheStorage'
 
