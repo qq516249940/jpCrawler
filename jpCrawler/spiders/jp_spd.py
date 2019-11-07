@@ -6,15 +6,10 @@ sys.stdout=io.TextIOWrapper(sys.stdout.buffer,encoding='utf-8')
 
 
 
-links=list()
-links.append("http://jp.tingroom.com/kouyu/ryqjdh")
-link_range =range(2,23)
+links=open('links.txt')
+file_to_write = open("export.txt",'a')
+links= links.readlines()
 
-
-file = open("links.txt",'a')
-
-for num in link_range:
-    links.append("http://jp.tingroom.com/kouyu/ryqjdh/list_{num}.html".format(num=num))
 
 
 import requests
@@ -32,18 +27,21 @@ end
 
 class JpspdSpider(scrapy.Spider):
     name = 'jpspd'
-    allowed_domains = ['jd.com']
-    start_urls = links[:]
+    allowed_domains = ['tingroom.com']
+    start_urls = links
 
     def start_requests(self):
         for url in self.start_urls:
+            
             yield SplashRequest(url,
                                 endpoint='execute',
                                 args={'lua_source': lua_script},
                                 cache_args=['lua_source'],
                                 callback=self.parse)
     def parse(self, response):
-        print("-----------------")
-        hrefs = response.xpath('//ul[@class="e2"]/li/a/@href').extract()
-        for href in hrefs:
-            print(href,file=file)
+        contents = response.xpath('//div[@id="article"]/p')
+
+        for content in contents:
+            if content != '[]':
+                print('----------------------------------')
+                print(content.extract(),file=file_to_write)
